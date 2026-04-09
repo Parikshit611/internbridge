@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Interview Prep — The Editorial Campus</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f8fafc;color:#1e293b;display:flex;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+/* SIDEBAR */
+.sidebar{width:200px;background:#fff;border-right:1px solid #e8edf5;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;transition:transform .3s}
+.sidebar-logo{padding:1.4rem 1.4rem 1rem;border-bottom:1px solid #e8edf5}
+.sidebar-logo .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:.6rem}
+.sidebar-logo .logo-icon span{color:#fff;font-size:1.1rem}
+.sidebar-logo .brand{font-size:.88rem;font-weight:700;color:#1a1a2e}
+.sidebar-logo .sub{font-size:.65rem;color:#94a3b8;letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.sidebar-nav{flex:1;padding:1rem .75rem;display:flex;flex-direction:column;gap:.25rem}
+.nav-item{display:flex;align-items:center;gap:.7rem;padding:.6rem .75rem;border-radius:10px;font-size:.83rem;font-weight:500;color:#64748b;cursor:pointer;transition:.2s;text-decoration:none}
+.nav-item:hover{background:#f1f5f9;color:#1a1a2e}
+.nav-item.active{background:#eff6ff;color:#2563eb;font-weight:600}
+.nav-item .icon{font-size:1rem;width:18px;text-align:center}
+.sidebar-bottom{padding:.75rem;border-top:1px solid #e8edf5;display:flex;flex-direction:column;gap:.25rem}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:40}
+
+/* MAIN */
+.main{flex:1;margin-left:200px;display:flex;flex-direction:column}
+.topbar{background:#fff;border-bottom:1px solid #e8edf5;padding:.9rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30}
+.topbar h1{font-size:1.3rem;font-weight:800;color:#0f172a}
+.topbar p{font-size:.78rem;color:#94a3b8;margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:.75rem}
+.notif-btn{width:38px;height:38px;border-radius:10px;background:#f1f5f9;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;position:relative}
+.user-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.85rem;cursor:pointer}
+.hamburger-btn{display:none;width:38px;height:38px;border-radius:10px;background:#f1f5f9;border:1px solid #e2e8f0;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer}
+
+/* CONTENT */
+.content{padding:2rem;flex:1}
+.content-inner{max-width:1100px;margin:0 auto}
+
+/* HERO BANNER */
+.prep-hero{background:linear-gradient(135deg,#1e40af 0%,#2563eb 60%,#3b82f6 100%);border-radius:20px;padding:2.5rem;color:#fff;margin-bottom:2.5rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.prep-hero h2{font-size:1.6rem;font-weight:800;letter-spacing:-.02em}
+.prep-hero p{color:rgba(255,255,255,.8);font-size:.9rem;margin-top:.5rem;max-width:420px}
+.prep-hero-stats{display:flex;gap:2rem;flex-wrap:wrap;margin-top:1rem}
+.hero-stat-num{font-size:1.5rem;font-weight:800}
+.hero-stat-label{font-size:.72rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.05em}
+.start-prep-btn{background:#fff;color:#1d4ed8;padding:.75rem 1.75rem;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;border:none;font-family:inherit;white-space:nowrap;transition:.2s}
+.start-prep-btn:hover{background:#f1f5f9;transform:scale(1.02)}
+
+/* CATEGORY TABS */
+.cat-tabs{display:flex;gap:.75rem;margin-bottom:2rem;flex-wrap:wrap}
+.cat-tab{padding:.55rem 1.3rem;border-radius:100px;font-size:.83rem;font-weight:600;cursor:pointer;border:1.5px solid #e2e8f0;background:#fff;color:#64748b;transition:.2s;font-family:inherit}
+.cat-tab.active{background:#2563eb;color:#fff;border-color:#2563eb}
+.cat-tab:hover:not(.active){border-color:#2563eb;color:#2563eb}
+
+/* VIDEO SECTION */
+.section-label{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2563eb;margin-bottom:.5rem}
+.section-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.section-title-row h2{font-size:1.1rem;font-weight:800;color:#0f172a}
+.see-all{font-size:.8rem;color:#2563eb;font-weight:600;cursor:pointer}
+.video-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:2.5rem}
+.video-card{background:#fff;border:1px solid #e8edf5;border-radius:14px;overflow:hidden;cursor:pointer;transition:.25s}
+.video-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.1);transform:translateY(-3px)}
+.video-thumb{height:130px;display:flex;align-items:center;justify-content:center;position:relative;background:#f1f5f9}
+.play-btn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:.2s;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.video-card:hover .play-btn{transform:scale(1.1)}
+.duration-tag{position:absolute;bottom:.5rem;right:.5rem;background:rgba(0,0,0,.7);color:#fff;font-size:.65rem;font-weight:700;padding:.2rem .5rem;border-radius:4px}
+.video-body{padding:1rem}
+.video-cat{font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.4rem}
+.video-title{font-size:.9rem;font-weight:700;color:#0f172a;line-height:1.3}
+.video-meta{display:flex;align-items:center;gap:.5rem;margin-top:.6rem}
+.video-level{font-size:.7rem;font-weight:600;padding:.2rem .55rem;border-radius:100px}
+.level-beg{background:#f0fdf4;color:#22c55e}
+.level-int{background:#fffbeb;color:#f59e0b}
+.level-adv{background:#fef2f2;color:#ef4444}
+.video-views{font-size:.7rem;color:#94a3b8;margin-left:auto}
+
+/* THUMB COLORS */
+.th-blue{background:linear-gradient(135deg,#1e3a8a,#2563eb)}
+.th-purple{background:linear-gradient(135deg,#4c1d95,#7c3aed)}
+.th-teal{background:linear-gradient(135deg,#0f766e,#0d9488)}
+.th-orange{background:linear-gradient(135deg,#9a3412,#ea580c)}
+.th-navy{background:linear-gradient(135deg,#0f172a,#1e293b)}
+.th-green{background:linear-gradient(135deg,#14532d,#16a34a)}
+
+/* TIPS SECTION */
+.tips-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.tip-card{background:#fff;border:1px solid #e8edf5;border-radius:14px;padding:1.25rem;transition:.2s}
+.tip-card:hover{border-color:#93c5fd;box-shadow:0 4px 16px rgba(37,99,235,.08)}
+.tip-icon{font-size:1.5rem;margin-bottom:.75rem}
+.tip-title{font-size:.88rem;font-weight:700;color:#0f172a;margin-bottom:.4rem}
+.tip-desc{font-size:.78rem;color:#64748b;line-height:1.6}
+
+/* PROGRESS */
+.progress-section{background:#fff;border:1px solid #e8edf5;border-radius:14px;padding:1.5rem;margin-bottom:2rem}
+.progress-section h3{font-size:.95rem;font-weight:800;color:#0f172a;margin-bottom:1.25rem}
+.prog-item{margin-bottom:1rem}
+.prog-item:last-child{margin-bottom:0}
+.prog-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem}
+.prog-name{font-size:.83rem;font-weight:600;color:#0f172a}
+.prog-pct{font-size:.78rem;font-weight:700;color:#2563eb}
+.prog-bar{height:6px;background:#e2e8f0;border-radius:100px;overflow:hidden}
+.prog-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#2563eb,#3b82f6);transition:width .8s ease}
+
+/* FOOTER */
+.page-footer{background:#0f172a;color:#64748b;padding:1.5rem 2rem;font-size:.72rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-top:auto}
+.page-footer a{color:#475569;margin-left:1rem}
+.page-footer a:hover{color:#94a3b8}
+
+@media(max-width:900px){
+  .video-grid{grid-template-columns:1fr 1fr}
+  .tips-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .main{margin-left:0}
+  .hamburger-btn{display:flex}
+  .content{padding:1rem}
+  .prep-hero{flex-direction:column}
+  .video-grid{grid-template-columns:1fr}
+  .tips-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon"><span>🎓</span></div>
+    <div class="brand">Editorial Campus</div>
+    <div class="sub">Placement Portal</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="student-dashboard.html" class="nav-item"><span class="icon">📊</span> Dashboard</a>
+    <a href="opportunities.html" class="nav-item"><span class="icon">💼</span> Internships</a>
+    <a href="student-dashboard.html" class="nav-item"><span class="icon">📋</span> Applications</a>
+    <a href="interview-prep.html" class="nav-item active"><span class="icon">🎤</span> Interview Prep</a>
+    <a href="student-dashboard.html" class="nav-item"><span class="icon">👤</span> Profile</a>
+  </nav>
+  <div class="sidebar-bottom">
+    <a href="#" class="nav-item"><span class="icon">❓</span> Help Center</a>
+    <a href="login.html" class="nav-item"><span class="icon">🚪</span> Logout</a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div>
+      <h1>Interview Preparation</h1>
+      <p>Curated resources to help you ace every round.</p>
+    </div>
+    <div class="topbar-right">
+      <button class="hamburger-btn" onclick="openSidebar()">☰</button>
+      <div class="notif-btn">🔔</div>
+      <div class="user-avatar">AL</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="content-inner">
+
+      <!-- HERO -->
+      <div class="prep-hero">
+        <div>
+          <h2>Practice makes placement.</h2>
+          <p>Role-specific questions, AI feedback, and expert video guides — all in one place. Build confidence before you step into any interview room.</p>
+          <div class="prep-hero-stats">
+            <div><div class="hero-stat-num">120+</div><div class="hero-stat-label">Video Lessons</div></div>
+            <div><div class="hero-stat-num">2,400+</div><div class="hero-stat-label">Practice Questions</div></div>
+            <div><div class="hero-stat-num">95%</div><div class="hero-stat-label">Success Rate</div></div>
+          </div>
+        </div>
+        <button class="start-prep-btn" onclick="alert('Starting your personalized prep session!')">Start Preparing →</button>
+      </div>
+
+      <!-- PROGRESS TRACKER -->
+      <div class="progress-section">
+        <h3>Your Preparation Progress</h3>
+        <div class="prog-item">
+          <div class="prog-header"><span class="prog-name">Technical Interview</span><span class="prog-pct">65%</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:65%"></div></div>
+        </div>
+        <div class="prog-item">
+          <div class="prog-header"><span class="prog-name">Aptitude & Reasoning</span><span class="prog-pct">45%</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:45%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div>
+        </div>
+        <div class="prog-item">
+          <div class="prog-header"><span class="prog-name">HR & Behavioural</span><span class="prog-pct">80%</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:80%;background:linear-gradient(90deg,#22c55e,#4ade80)"></div></div>
+        </div>
+      </div>
+
+      <!-- CATEGORY TABS -->
+      <div class="cat-tabs">
+        <button class="cat-tab active" onclick="filterCat(this,'all')">All Topics</button>
+        <button class="cat-tab" onclick="filterCat(this,'tech')">💻 Technical</button>
+        <button class="cat-tab" onclick="filterCat(this,'apt')">🧠 Aptitude</button>
+        <button class="cat-tab" onclick="filterCat(this,'hr')">🤝 HR Round</button>
+        <button class="cat-tab" onclick="filterCat(this,'portfolio')">🎨 Portfolio Review</button>
+      </div>
+
+      <!-- TECHNICAL VIDEOS -->
+      <div class="section-label">Technical Preparation</div>
+      <div class="section-title-row">
+        <h2>Technical Interview Videos</h2>
+        <span class="see-all">See all 40 →</span>
+      </div>
+      <div class="video-grid">
+        <div class="video-card" onclick="openVideo('Data Structures Mastery')">
+          <div class="video-thumb th-blue"><div class="play-btn">▶</div><span class="duration-tag">24:30</span></div>
+          <div class="video-body">
+            <div class="video-cat" style="color:#2563eb">Data Structures</div>
+            <div class="video-title">Arrays, Stacks & Queues — Complete Guide</div>
+            <div class="video-meta"><span class="video-level level-beg">Beginner</span><span class="video-views">8.2k views</span></div>
+          </div>
+        </div>
+        <div class="video-card" onclick="openVideo('System Design Basics')">
+          <div class="video-thumb th-purple"><div class="play-btn">▶</div><span class="duration-tag">31:15</span></div>
+          <div class="video-body">
+            <div class="video-cat" style="color:#7c3aed">System Design</div>
+            <div class="video-title">System Design for Entry-Level Roles</div>
+            <div class="video-meta"><span class="video-level level-int">Intermediate</span><span class="video-views">5.6k views</span></div>
+          </div>
+        </div>
+        <div class="video-card" onclick="openVideo('Coding Patterns')">
+          <div class="video-thumb th-navy"><div class="play-btn">▶</div><span class="duration-tag">18:40</span></div>
+          <div class="video-body">
+            <div class="video-cat" style="color:#475569">Algorithms</div>
+            <div class="video-title">Top 10 Coding Patterns to Know Before Any Interview</div>
+            <div class="video-meta"><span class="video-level level-adv">Advanced</span><span class="video-views">12.1k views</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- APTITUDE VIDEOS -->
+      <div class="section-label">Aptitude Preparation</div>
+      <div class="section-title-row">
+        <h2>Aptitude & Reasoning</h2>
+        <span class="see-all">See all 35 →</span>
+      </div>
+      <div class="video-grid">
+        <div class="video-card" onclick="openVideo('Quantitative Aptitude')">
+          <div class="video-thumb th-teal"><div class="play-btn">▶</div><span class="duration-tag">22:10</span></div>
+          <div class="video-body">
+            <div class="video-cat" style="color:#0d9488">Quantitative</div>
+            <div class="video-title">Percentages, Ratios & Time-Speed — Shortcut Methods</div>
+            <div class="video-meta"><span class="video-level level-beg">Beginner</span><span class="video-views">6.8k views</span></div>
+          </div>
+        </div>
+        <div class="video-card" onclick="openVideo('Logical Reasoning')">
+          <div class="video-thumb th-orange"><div class="play-btn">▶</div><span class="duration-tag">19:55</span></div>
+          <div class="video-body">
+            <div class="video-cat" style="color:#ea580c">Logical</div>
+            <div class="video-title">Logical Reasoning Patterns — Solved Examples</div>
+            <div class="video-meta"><span class="video-level level-int">Intermediate</span><span class="video-views">4.4k views</span></div>
+          </div>
+        </div>
+        <div class="video-card" onclick="openVideo('Verbal Ability')">
+          <div class="video-thumb th-green"><div class="play-btn">▶</div><span class="duration-tag">15:20</span></div>
+          <div class="video-body">
+            <div class="video-cat" style="color:#16a34a">Verbal</div>
+            <div class="video-title">Reading Comprehension & Vocabulary Building</div>
+            <div class="video-meta"><span class="video-level level-beg">Beginner</span><span class="video-views">3.9k views</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HR VIDEOS -->
+      <div class="section-label">HR Preparation</div>
+      <div class="section-title-row">
+        <h2>HR & Behavioural Interview</h2>
+        <span class="see-all">See all 28 →</span>
+      </div>
+      <div class="video-grid">
+        <div class="video-card" onclick="openVideo('Tell Me About Yourself')">
+          <div class="video-thumb th-purple"><div class="play-btn">▶</div><span class="duration-tag">12:45</span></div>
+          <div class="video-body">
+            <div class="video-cat" style="color:#7c3aed">HR Essentials</div>
+            <div class="video-title">"Tell Me About Yourself" — The Perfect Answer Formula</div>
+            <div class="video-meta"><span class="video-level level-beg">Beginner</span><span class="video-views">15.3k views</span></div>
+          </div>
+        </div>
+        <div class="video-card" onclick="openVideo('STAR Method')">
+          <div class="video-thumb th-blue"><div class="play-btn">▶</div><span class="duration-tag">20:10</span></div>
+          <div class="video-body">
+            <div class="video-cat" style="color:#2563eb">Behavioural</div>
+            <div class="video-title">Answering Situational Questions using the STAR Method</div>
+            <div class="video-meta"><span class="video-level level-int">Intermediate</span><span class="video-views">9.7k views</span></div>
+          </div>
+        </div>
+        <div class="video-card" onclick="openVideo('Salary Negotiation')">
+          <div class="video-thumb th-teal"><div class="play-btn">▶</div><span class="duration-tag">16:30</span></div>
+          <div class="video-body">
+            <div class="video-cat" style="color:#0d9488">Negotiation</div>
+            <div class="video-title">How to Negotiate Your Stipend as a Student</div>
+            <div class="video-meta"><span class="video-level level-adv">Advanced</span><span class="video-views">7.2k views</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK TIPS -->
+      <div class="section-title-row" style="margin-top:.5rem">
+        <h2>Quick Preparation Tips</h2>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card"><div class="tip-icon">🔬</div><h4 class="tip-title">Research the Company</h4><p class="tip-desc">Spend 30 minutes studying the company's recent work, values, and the role's requirements before every interview.</p></div>
+        <div class="tip-card"><div class="tip-icon">🪞</div><h4 class="tip-title">Practice Out Loud</h4><p class="tip-desc">Record yourself answering common questions. Reviewing playback dramatically improves delivery and confidence.</p></div>
+        <div class="tip-card"><div class="tip-icon">❓</div><h4 class="tip-title">Prepare Your Questions</h4><p class="tip-desc">Always have 2–3 thoughtful questions ready for the interviewer. It shows genuine interest and preparation.</p></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>© 2024 THE EDITORIAL CAMPUS. BRIDGING AMBITION AND REALITY.</span>
+    <span><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></span>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div id="videoModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;align-items:center;justify-content:center">
+  <div style="background:#1a1a2e;border-radius:20px;padding:2rem;max-width:560px;width:90%;position:relative">
+    <button onclick="closeVideo()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#94a3b8">×</button>
+    <div id="videoTitle" style="color:#fff;font-size:1.1rem;font-weight:700;margin-bottom:1.25rem"></div>
+    <div style="background:#0f172a;border-radius:12px;height:200px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem">
+      <div style="text-align:center">
+        <div style="font-size:3rem;margin-bottom:.5rem">▶</div>
+        <div style="color:#64748b;font-size:.85rem">Video player would be embedded here</div>
+        <div style="color:#64748b;font-size:.78rem;margin-top:.25rem">(YouTube / Vimeo embed)</div>
+      </div>
+    </div>
+    <button onclick="closeVideo()" style="width:100%;background:#2563eb;color:#fff;border:none;border-radius:10px;padding:.75rem;font-size:.88rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif">Close Video</button>
+  </div>
+</div>
+
+<script>
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('open')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open')}
+function openVideo(title){
+  document.getElementById('videoTitle').textContent=title;
+  document.getElementById('videoModal').style.display='flex';
+}
+function closeVideo(){document.getElementById('videoModal').style.display='none'}
+function filterCat(el,cat){
+  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+// Animate progress bars on load
+window.addEventListener('load',()=>{
+  document.querySelectorAll('.prog-fill').forEach(b=>{
+    const w=b.style.width;b.style.width='0';
+    setTimeout(()=>{b.style.transition='width 1s ease';b.style.width=w;},300);
+  });
+});
+</script>
+</body>
+</html>

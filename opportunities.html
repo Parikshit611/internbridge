@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Curated Opportunities — The Editorial Campus</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f8fafc;color:#1e293b}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+
+/* NAV */
+nav{background:#fff;border-bottom:1px solid #e8edf5;padding:0 5vw;position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1280px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.nav-logo{font-size:.9rem;font-weight:700;color:#2563eb;white-space:nowrap}
+.nav-links{display:flex;gap:1.5rem;align-items:center}
+.nav-links a{font-size:.82rem;color:#64748b;font-weight:500;padding-bottom:2px;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.nav-links a.active{color:#2563eb;border-bottom-color:#2563eb}
+.nav-links a:hover{color:#2563eb}
+.nav-right{display:flex;align-items:center;gap:.6rem}
+.btn-notif{width:36px;height:36px;border-radius:9px;background:#f1f5f9;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:.95rem;cursor:pointer}
+.btn-settings{width:36px;height:36px;border-radius:9px;background:#f1f5f9;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:.95rem;cursor:pointer}
+.btn-post{background:#1d4ed8;color:#fff;padding:.45rem 1rem;border-radius:8px;font-size:.8rem;font-weight:700;white-space:nowrap;transition:.2s}
+.btn-post:hover{background:#1e40af}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.75rem;font-weight:700;cursor:pointer;flex-shrink:0}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:20px;height:2px;background:#1a1a2e;border-radius:2px}
+.mobile-menu{display:none;position:fixed;top:60px;left:0;right:0;background:#fff;border-bottom:1px solid #e8edf5;z-index:99;padding:1rem 5vw;flex-direction:column;gap:.6rem}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-size:.88rem;color:#64748b;padding:.5rem 0;border-bottom:1px solid #f1f5f9;font-weight:500}
+
+/* LAYOUT */
+.page-layout{max-width:1280px;margin:0 auto;padding:2rem 5vw;display:grid;grid-template-columns:260px 1fr;gap:2rem;align-items:start}
+
+/* SIDEBAR FILTERS */
+.filters-panel{position:sticky;top:76px}
+.filter-section{background:#fff;border:1px solid #e8edf5;border-radius:14px;padding:1.25rem;margin-bottom:1rem}
+.filter-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.filter-header h3{font-size:.88rem;font-weight:700;color:#0f172a}
+.clear-btn{font-size:.75rem;color:#2563eb;font-weight:600;cursor:pointer;background:none;border:none;font-family:inherit}
+.clear-btn:hover{color:#1d4ed8}
+.filter-group{margin-bottom:1.2rem}
+.filter-group:last-child{margin-bottom:0}
+.filter-group-label{font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#94a3b8;margin-bottom:.65rem}
+.filter-option{display:flex;align-items:center;gap:.5rem;margin-bottom:.45rem;cursor:pointer}
+.filter-option input[type=radio]{width:16px;height:16px;accent-color:#2563eb;cursor:pointer}
+.filter-option label{font-size:.82rem;color:#475569;cursor:pointer}
+.skill-chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.skill-chip{padding:.3rem .75rem;border-radius:100px;font-size:.75rem;font-weight:600;cursor:pointer;border:1.5px solid #e2e8f0;color:#64748b;background:#fff;transition:.2s;font-family:inherit}
+.skill-chip.active{background:#2563eb;color:#fff;border-color:#2563eb}
+.skill-chip:hover{border-color:#2563eb;color:#2563eb}
+.range-slider{width:100%;accent-color:#2563eb;margin:.5rem 0}
+.range-labels{display:flex;justify-content:space-between;font-size:.72rem;color:#94a3b8}
+.location-chips{display:flex;gap:.5rem;flex-wrap:wrap}
+.loc-chip{padding:.4rem .9rem;border-radius:100px;font-size:.78rem;font-weight:600;cursor:pointer;border:1.5px solid #e2e8f0;color:#64748b;background:#fff;transition:.2s;font-family:inherit}
+.loc-chip.active{background:#eff6ff;color:#2563eb;border-color:#2563eb}
+.workshop-box{background:linear-gradient(135deg,#1e3a8a,#2563eb);border-radius:14px;padding:1.25rem;color:#fff}
+.workshop-box h4{font-size:.9rem;font-weight:700;margin-bottom:.4rem}
+.workshop-box p{font-size:.75rem;color:rgba(255,255,255,.75);margin-bottom:.9rem}
+.workshop-btn{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);color:#fff;border-radius:7px;padding:.5rem .9rem;font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
+.workshop-btn:hover{background:rgba(255,255,255,.25)}
+
+/* MAIN LISTINGS */
+.listings-header{margin-bottom:1.5rem;display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.listings-header h1{font-size:1.7rem;font-weight:800;color:#0f172a;letter-spacing:-.02em}
+.listings-header p{font-size:.82rem;color:#64748b;margin-top:.3rem}
+.sort-row{display:flex;align-items:center;gap:.5rem}
+.sort-label{font-size:.78rem;color:#94a3b8;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.sort-select{background:#fff;border:1.5px solid #e2e8f0;border-radius:8px;padding:.35rem .8rem .35rem .6rem;font-size:.82rem;font-weight:600;color:#2563eb;cursor:pointer;font-family:inherit;appearance:none}
+
+/* LISTING CARDS */
+.listing-card{background:#fff;border:1.5px solid #e8edf5;border-radius:16px;padding:1.5rem;margin-bottom:1.25rem;transition:.25s;position:relative}
+.listing-card:hover{border-color:#93c5fd;box-shadow:0 8px 28px rgba(37,99,235,.1)}
+.hiring-badge{position:absolute;top:1.25rem;right:1.25rem;background:#f0fdf4;color:#22c55e;font-size:.65rem;font-weight:700;padding:.3rem .65rem;border-radius:100px;letter-spacing:.05em;border:1px solid #bbf7d0}
+.card-top{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem}
+.company-logo{width:48px;height:48px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;border:1px solid #e8edf5}
+.card-meta{flex:1;min-width:0}
+.company-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem;flex-wrap:wrap}
+.company-name{font-size:.72rem;font-weight:700;color:#2563eb;letter-spacing:.04em;text-transform:uppercase}
+.location-tag{font-size:.72rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.04em}
+.location-sep{color:#e2e8f0}
+.card-title{font-size:1.05rem;font-weight:800;color:#0f172a;line-height:1.2;padding-right:120px}
+.card-details{display:flex;align-items:center;gap:1.5rem;margin-top:.6rem;flex-wrap:wrap}
+.detail-item{display:flex;align-items:center;gap:.35rem;font-size:.8rem;color:#475569;font-weight:500}
+.detail-icon{font-size:.9rem}
+.card-desc{font-size:.83rem;color:#64748b;line-height:1.65;margin-bottom:1rem}
+.card-footer{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.skill-tags{display:flex;gap:.4rem;flex-wrap:wrap}
+.skill-pill{padding:.25rem .7rem;border-radius:100px;font-size:.72rem;font-weight:500;color:#475569;background:#f1f5f9;border:1px solid #e2e8f0}
+.card-actions{display:flex;align-items:center;gap:.75rem;flex-shrink:0}
+.view-btn{font-size:.82rem;color:#64748b;font-weight:600;cursor:pointer;background:none;border:none;font-family:inherit}
+.view-btn:hover{color:#2563eb}
+.apply-btn{background:#1d4ed8;color:#fff;padding:.55rem 1.3rem;border-radius:9px;font-size:.85rem;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:.2s}
+.apply-btn:hover{background:#1e40af;transform:translateY(-1px)}
+
+/* PAGINATION */
+.pagination{display:flex;align-items:center;justify-content:center;gap:.4rem;margin-top:2rem;padding-bottom:1rem}
+.page-btn{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:600;cursor:pointer;border:1.5px solid #e2e8f0;background:#fff;color:#64748b;transition:.2s;font-family:inherit}
+.page-btn:hover{border-color:#2563eb;color:#2563eb}
+.page-btn.active{background:#2563eb;color:#fff;border-color:#2563eb}
+.page-btn.arrow{color:#64748b}
+
+/* FOOTER */
+footer{background:#0f172a;padding:2rem 5vw;margin-top:2rem}
+.footer-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-brand{font-size:.82rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.04em}
+.footer-copy{font-size:.72rem;color:#475569}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap}
+.footer-links a{font-size:.72rem;color:#475569;transition:.2s}
+.footer-links a:hover{color:#94a3b8}
+
+@media(max-width:960px){
+  .page-layout{grid-template-columns:1fr}
+  .filters-panel{display:none}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+}
+@media(max-width:600px){
+  .card-title{padding-right:0}
+  .hiring-badge{position:static;display:inline-block;margin-bottom:.5rem}
+  .listings-header{flex-direction:column;align-items:flex-start}
+  .card-actions{width:100%}
+  .apply-btn{flex:1}
+  .footer-inner{flex-direction:column;text-align:center}
+  .footer-links{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">The Editorial Campus</a>
+    <ul class="nav-links">
+      <li><a href="opportunities.html" class="active">Opportunities</a></li>
+      <li><a href="student-dashboard.html">Applications</a></li>
+      <li><a href="student-dashboard.html">My Network</a></li>
+      <li><a href="#">Insights</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="btn-notif">🔔</div>
+      <div class="btn-settings">⚙</div>
+      <a href="recruiter-dashboard.html" class="btn-post">Post Internship</a>
+      <div class="user-avatar">AL</div>
+      <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="opportunities.html">Opportunities</a>
+  <a href="student-dashboard.html">Applications</a>
+  <a href="student-dashboard.html">My Network</a>
+  <a href="login.html">Sign In</a>
+</div>
+
+<div class="page-layout">
+  <!-- FILTERS -->
+  <aside class="filters-panel">
+    <div class="filter-section">
+      <div class="filter-header">
+        <h3>Filters</h3>
+        <button class="clear-btn" onclick="clearFilters()">CLEAR ALL</button>
+      </div>
+      <div class="filter-group">
+        <div class="filter-group-label">Domain</div>
+        <div class="filter-option"><input type="radio" name="domain" id="d1"/><label for="d1">Editorial & Content</label></div>
+        <div class="filter-option"><input type="radio" name="domain" id="d2" checked/><label for="d2">Digital Journalism</label></div>
+        <div class="filter-option"><input type="radio" name="domain" id="d3"/><label for="d3">Marketing & PR</label></div>
+        <div class="filter-option"><input type="radio" name="domain" id="d4"/><label for="d4">Design & Arts</label></div>
+        <div class="filter-option"><input type="radio" name="domain" id="d5"/><label for="d5">Technology</label></div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-group-label">Required Skills</div>
+        <div class="skill-chips">
+          <button class="skill-chip active">Copywriting</button>
+          <button class="skill-chip active">SEO</button>
+          <button class="skill-chip active">Research</button>
+          <button class="skill-chip active">Social Media</button>
+          <button class="skill-chip">Figma</button>
+          <button class="skill-chip">Python</button>
+          <button class="skill-chip">React</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-group-label">Stipend Range</div>
+        <input type="range" class="range-slider" min="0" max="100" value="50" oninput="updateRange(this.value)"/>
+        <div class="range-labels"><span>₹0</span><span id="rangeVal">₹50,000+</span></div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-group-label">Location Preference</div>
+        <div class="location-chips">
+          <button class="loc-chip active">Work from Home</button>
+          <button class="loc-chip">On-site</button>
+          <button class="loc-chip">Hybrid</button>
+        </div>
+      </div>
+    </div>
+    <div class="workshop-box">
+      <h4>Elevate your portfolio with exclusive workshops.</h4>
+      <p>Join 2,000+ students curating their career path.</p>
+      <button class="workshop-btn">Learn More</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <div class="listings-header">
+      <div>
+        <h1>Curated Opportunities</h1>
+        <p>Discover 48 active internships matching your editorial profile.</p>
+      </div>
+      <div class="sort-row">
+        <span class="sort-label">Sort By:</span>
+        <select class="sort-select">
+          <option>Most Recent</option>
+          <option>Highest Stipend</option>
+          <option>Best Match</option>
+          <option>Deadline Soon</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- CARD 1 -->
+    <div class="listing-card">
+      <span class="hiring-badge">ACTIVELY HIRING</span>
+      <div class="card-top">
+        <div class="company-logo">📰</div>
+        <div class="card-meta">
+          <div class="company-row">
+            <span class="company-name">Vogue Digital</span>
+            <span class="location-sep">•</span>
+            <span class="location-tag">Mumbai / Remote</span>
+          </div>
+          <div class="card-title">Senior Editorial Intern — Fashion & Culture</div>
+          <div class="card-details">
+            <span class="detail-item"><span class="detail-icon">💰</span>₹25,000 / month</span>
+            <span class="detail-item"><span class="detail-icon">📅</span>6 Months</span>
+            <span class="detail-item"><span class="detail-icon">⏰</span>Full-time</span>
+          </div>
+        </div>
+      </div>
+      <p class="card-desc">Join our digital desk to craft compelling narratives at the intersection of haute couture and street style. You'll be working directly with senior editors on high-impact features.</p>
+      <div class="card-footer">
+        <div class="skill-tags"><span class="skill-pill">Copywriting</span><span class="skill-pill">SEO Research</span></div>
+        <div class="card-actions">
+          <button class="view-btn" onclick="alert('Full details coming in next update!')">View Details</button>
+          <button class="apply-btn" onclick="applyNow(this,'Senior Editorial Intern')">Apply Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="listing-card">
+      <div class="card-top">
+        <div class="company-logo">📊</div>
+        <div class="card-meta">
+          <div class="company-row">
+            <span class="company-name">TechChronicle</span>
+            <span class="location-sep">•</span>
+            <span class="location-tag">Work from Home</span>
+          </div>
+          <div class="card-title">Newsletter Strategist & Content Curator</div>
+          <div class="card-details">
+            <span class="detail-item"><span class="detail-icon">💰</span>₹18,000 / month</span>
+            <span class="detail-item"><span class="detail-icon">📅</span>3 Months</span>
+            <span class="detail-item"><span class="detail-icon">⏰</span>Part-time</span>
+          </div>
+        </div>
+      </div>
+      <p class="card-desc">Curate daily tech briefings for a subscriber base of 50k+ professionals. Requires a keen eye for emerging trends and the ability to summarize complex topics into punchy insights.</p>
+      <div class="card-footer">
+        <div class="skill-tags"><span class="skill-pill">Substack</span><span class="skill-pill">Data Viz</span></div>
+        <div class="card-actions">
+          <button class="view-btn" onclick="alert('Full details coming in next update!')">View Details</button>
+          <button class="apply-btn" onclick="applyNow(this,'Newsletter Strategist')">Apply Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="listing-card">
+      <div class="card-top">
+        <div class="company-logo">🌿</div>
+        <div class="card-meta">
+          <div class="company-row">
+            <span class="company-name">The Green Reporter</span>
+            <span class="location-sep">•</span>
+            <span class="location-tag">New Delhi</span>
+          </div>
+          <div class="card-title">Environmental Investigative Journalism</div>
+          <div class="card-details">
+            <span class="detail-item"><span class="detail-icon">💰</span>₹15,000 / month</span>
+            <span class="detail-item"><span class="detail-icon">📅</span>4 Months</span>
+            <span class="detail-item"><span class="detail-icon">⏰</span>Full-time</span>
+          </div>
+        </div>
+      </div>
+      <p class="card-desc">Conduct on-ground research and investigative reporting on sustainability initiatives and environmental policy. A perfect role for students passionate about climate action.</p>
+      <div class="card-footer">
+        <div class="skill-tags"><span class="skill-pill">Field Reporting</span><span class="skill-pill">Analysis</span></div>
+        <div class="card-actions">
+          <button class="view-btn" onclick="alert('Full details coming in next update!')">View Details</button>
+          <button class="apply-btn" onclick="applyNow(this,'Environmental Journalism')">Apply Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 4 -->
+    <div class="listing-card">
+      <span class="hiring-badge">ACTIVELY HIRING</span>
+      <div class="card-top">
+        <div class="company-logo">📱</div>
+        <div class="card-meta">
+          <div class="company-row">
+            <span class="company-name">DigitalFirst Media</span>
+            <span class="location-sep">•</span>
+            <span class="location-tag">Bengaluru / Hybrid</span>
+          </div>
+          <div class="card-title">Social Media Content Intern</div>
+          <div class="card-details">
+            <span class="detail-item"><span class="detail-icon">💰</span>₹20,000 / month</span>
+            <span class="detail-item"><span class="detail-icon">📅</span>3 Months</span>
+            <span class="detail-item"><span class="detail-icon">⏰</span>Full-time</span>
+          </div>
+        </div>
+      </div>
+      <p class="card-desc">Drive social media strategy and create high-performing content across Instagram, LinkedIn, and Twitter for a rapidly growing digital media brand with 2M+ followers.</p>
+      <div class="card-footer">
+        <div class="skill-tags"><span class="skill-pill">Social Media</span><span class="skill-pill">Canva</span><span class="skill-pill">Analytics</span></div>
+        <div class="card-actions">
+          <button class="view-btn" onclick="alert('Full details coming in next update!')">View Details</button>
+          <button class="apply-btn" onclick="applyNow(this,'Social Media Content')">Apply Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+      <button class="page-btn arrow">←</button>
+      <button class="page-btn active">1</button>
+      <button class="page-btn" onclick="this.parentNode.querySelector('.active').classList.remove('active');this.classList.add('active')">2</button>
+      <button class="page-btn" onclick="this.parentNode.querySelector('.active').classList.remove('active');this.classList.add('active')">3</button>
+      <button class="page-btn">…</button>
+      <button class="page-btn arrow">→</button>
+    </div>
+  </main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">The Editorial Campus</div>
+    <div class="footer-copy">© 2024 THE EDITORIAL CAMPUS. BRIDGING AMBITION AND REALITY.</div>
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Campus Partners</a>
+      <a href="#">Recruiter FAQ</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open')}
+function clearFilters(){
+  document.querySelectorAll('.skill-chip.active').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.loc-chip.active').forEach(c=>c.classList.remove('active'));
+}
+function updateRange(v){document.getElementById('rangeVal').textContent='₹'+v*1000+'+';}
+document.querySelectorAll('.skill-chip').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('active')));
+document.querySelectorAll('.loc-chip').forEach(c=>c.addEventListener('click',()=>{document.querySelectorAll('.loc-chip').forEach(x=>x.classList.remove('active'));c.classList.add('active')}));
+function applyNow(btn, role){
+  btn.textContent='Applied ✓';
+  btn.style.background='#22c55e';
+  btn.disabled=true;
+  setTimeout(()=>{alert(`Application submitted for "${role}"! Track it in your dashboard.`)},200);
+}
+</script>
+</body>
+</html>

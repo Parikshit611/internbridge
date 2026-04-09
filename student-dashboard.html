@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Student Dashboard — The Editorial Campus</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;display:flex;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+/* SIDEBAR */
+.sidebar{width:200px;background:#fff;border-right:1px solid #e8edf5;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;transition:transform .3s}
+.sidebar-logo{padding:1.4rem 1.4rem 1rem;border-bottom:1px solid #e8edf5}
+.sidebar-logo .brand{font-size:.88rem;font-weight:700;color:#1a1a2e}
+.sidebar-logo .sub{font-size:.65rem;color:#94a3b8;letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.sidebar-logo .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:.6rem}
+.sidebar-logo .logo-icon span{color:#fff;font-size:1.1rem}
+.sidebar-nav{flex:1;padding:1rem .75rem;display:flex;flex-direction:column;gap:.25rem}
+.nav-item{display:flex;align-items:center;gap:.7rem;padding:.6rem .75rem;border-radius:10px;font-size:.83rem;font-weight:500;color:#64748b;cursor:pointer;transition:.2s;text-decoration:none}
+.nav-item:hover{background:#f1f5f9;color:#1a1a2e}
+.nav-item.active{background:#eff6ff;color:#2563eb;font-weight:600}
+.nav-item .icon{font-size:1rem;width:18px;text-align:center}
+.sidebar-bottom{padding:.75rem;border-top:1px solid #e8edf5;display:flex;flex-direction:column;gap:.25rem}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:40}
+
+/* MAIN */
+.main{flex:1;margin-left:200px;display:flex;flex-direction:column;min-height:100vh}
+
+/* TOP BAR */
+.topbar{background:#fff;border-bottom:1px solid #e8edf5;padding:.9rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30}
+.topbar-left h1{font-size:1.4rem;font-weight:800;color:#0f172a}
+.topbar-left p{font-size:.8rem;color:#94a3b8;margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:.75rem}
+.notif-btn{width:38px;height:38px;border-radius:10px;background:#f1f5f9;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;position:relative}
+.notif-dot{width:8px;height:8px;border-radius:50%;background:#ef4444;position:absolute;top:6px;right:6px;border:2px solid #fff}
+.user-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.85rem;cursor:pointer}
+.hamburger-btn{display:none;width:38px;height:38px;border-radius:10px;background:#f1f5f9;border:1px solid #e2e8f0;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer}
+
+/* CONTENT */
+.content{padding:2rem;flex:1}
+.content-inner{max-width:1100px;margin:0 auto}
+
+/* PROFILE CARD */
+.profile-section{display:grid;grid-template-columns:1fr auto;gap:1.5rem;margin-bottom:2rem;align-items:start}
+.profile-card{background:#fff;border:1px solid #e8edf5;border-radius:16px;padding:1.75rem}
+.profile-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.25rem;gap:1rem}
+.portfolio-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#22c55e;background:#f0fdf4;border:1px solid #bbf7d0;padding:.25rem .65rem;border-radius:100px;margin-bottom:.6rem}
+.profile-name{font-size:1.3rem;font-weight:800;color:#0f172a}
+.profile-school{font-size:.82rem;color:#64748b;margin-top:.2rem}
+.update-btn{display:flex;align-items:center;gap:.5rem;background:#2563eb;color:#fff;padding:.5rem 1rem;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;white-space:nowrap}
+.update-btn:hover{background:#1d4ed8}
+.profile-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
+.pstat{background:#f8fafc;border-radius:10px;padding:.9rem;border:1px solid #e8edf5}
+.pstat-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;font-weight:600}
+.pstat-value{margin-top:.3rem;font-size:.95rem;font-weight:700;color:#0f172a}
+.pstat-value.blue{color:#2563eb}
+.pstat-value.green{color:#22c55e}
+.pstat-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.3rem}
+.pstat-tag{font-size:.68rem;background:#eff6ff;color:#2563eb;padding:.15rem .5rem;border-radius:4px;font-weight:500}
+
+/* RIGHT TOOLS */
+.tools-panel{display:flex;flex-direction:column;gap:.75rem;width:220px}
+.tool-btn{background:#fff;border:1px solid #e8edf5;border-radius:12px;padding:1rem 1.1rem;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:space-between}
+.tool-btn:hover{border-color:#2563eb;box-shadow:0 4px 16px rgba(37,99,235,.1)}
+.tool-btn.blue-filled{background:#2563eb;border-color:#2563eb;color:#fff}
+.tool-btn.blue-filled:hover{background:#1d4ed8}
+.tool-btn-left h4{font-size:.85rem;font-weight:700;color:#0f172a}
+.tool-btn.blue-filled .tool-btn-left h4{color:#fff}
+.tool-btn-left p{font-size:.72rem;color:#94a3b8;margin-top:.15rem}
+.tool-btn.blue-filled .tool-btn-left p{color:rgba(255,255,255,.7)}
+.tool-btn-icon{font-size:1.1rem}
+
+/* APPLICATIONS */
+.section-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.section-header-row h2{font-size:1.1rem;font-weight:800;color:#0f172a}
+.view-all-link{font-size:.8rem;color:#2563eb;font-weight:600;cursor:pointer}
+.view-all-link:hover{color:#1d4ed8}
+.app-card{background:#fff;border:1px solid #e8edf5;border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:.75rem;display:flex;align-items:center;gap:1.25rem;transition:.2s}
+.app-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.07)}
+.app-logo{width:44px;height:44px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.app-info{flex:1;min-width:0}
+.app-title{font-size:.95rem;font-weight:700;color:#0f172a}
+.app-company{font-size:.78rem;color:#64748b;margin-top:.15rem}
+.app-progress{flex:2;min-width:0;padding:0 1rem}
+.progress-label{display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem}
+.progress-stage{font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#2563eb}
+.progress-pct{font-size:.72rem;color:#94a3b8}
+.progress-bar{height:6px;background:#e2e8f0;border-radius:100px;overflow:hidden}
+.progress-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#2563eb,#3b82f6)}
+.progress-fill.orange{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+.app-status{flex-shrink:0}
+.status-badge{padding:.4rem .9rem;border-radius:100px;font-size:.75rem;font-weight:700}
+.status-badge.shortlisted{background:#eff6ff;color:#2563eb}
+.status-badge.review{background:#fff7ed;color:#f59e0b}
+.status-badge.applied{background:#f0fdf4;color:#22c55e}
+.status-badge.rejected{background:#fef2f2;color:#ef4444}
+
+/* CURATED */
+.ai-badge{display:inline-flex;align-items:center;gap:.3rem;background:#f0fdf4;color:#22c55e;border:1px solid #bbf7d0;font-size:.68rem;font-weight:700;padding:.25rem .65rem;border-radius:100px;letter-spacing:.04em}
+.curated-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:1rem}
+.intern-card{background:#fff;border:1px solid #e8edf5;border-radius:16px;overflow:hidden;transition:.25s;cursor:pointer}
+.intern-card:hover{box-shadow:0 8px 28px rgba(0,0,0,.1);transform:translateY(-3px)}
+.intern-card-img{height:140px;position:relative;overflow:hidden;background:linear-gradient(135deg,#1e293b,#334155)}
+.intern-card-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5),transparent)}
+.intern-card-tag{position:absolute;top:.75rem;left:.75rem;background:rgba(255,255,255,.9);color:#1a1a2e;font-size:.68rem;font-weight:700;padding:.25rem .6rem;border-radius:100px;letter-spacing:.04em}
+.intern-card-body{padding:1rem}
+.intern-card-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem}
+.intern-card-title{font-size:.95rem;font-weight:700;color:#0f172a}
+.bookmark-btn{color:#94a3b8;font-size:1rem;cursor:pointer;flex-shrink:0}
+.intern-card-company{font-size:.78rem;color:#64748b;margin-top:.2rem}
+.intern-card-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.6rem}
+.intern-tag{font-size:.68rem;background:#f1f5f9;color:#475569;padding:.2rem .55rem;border-radius:4px;font-weight:500}
+.intern-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.9rem}
+.intern-price{font-size:.88rem;font-weight:700;color:#0f172a}
+.apply-link{font-size:.8rem;font-weight:700;color:#2563eb;display:flex;align-items:center;gap:.25rem}
+.apply-link:hover{color:#1d4ed8}
+
+/* CARD COLORS */
+.card-dark{background:linear-gradient(135deg,#0f172a,#1e293b)}
+.card-teal{background:linear-gradient(135deg,#0f766e,#0d9488)}
+.card-amber{background:linear-gradient(135deg,#92400e,#b45309)}
+
+/* FOOTER */
+.page-footer{background:#0f172a;color:#64748b;padding:1.5rem 2rem;margin-top:auto;font-size:.72rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.page-footer a{color:#475569;margin-left:1rem}
+.page-footer a:hover{color:#94a3b8}
+
+@media(max-width:1024px){
+  .profile-section{grid-template-columns:1fr}
+  .tools-panel{flex-direction:row;width:100%;flex-wrap:wrap}
+  .tool-btn{flex:1;min-width:140px}
+  .curated-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .main{margin-left:0}
+  .hamburger-btn{display:flex}
+  .topbar{padding:.9rem 1rem}
+  .content{padding:1rem}
+  .profile-stats{grid-template-columns:1fr 1fr}
+  .curated-grid{grid-template-columns:1fr}
+  .app-card{flex-wrap:wrap}
+  .app-progress{width:100%;padding:0}
+}
+@media(max-width:480px){
+  .profile-stats{grid-template-columns:1fr 1fr}
+  .topbar-left h1{font-size:1.1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon"><span>🎓</span></div>
+    <div class="brand">Editorial Campus</div>
+    <div class="sub">Placement Portal</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="student-dashboard.html" class="nav-item active"><span class="icon">📊</span> Dashboard</a>
+    <a href="opportunities.html" class="nav-item"><span class="icon">💼</span> Internships</a>
+    <a href="student-dashboard.html" class="nav-item"><span class="icon">📋</span> Applications</a>
+    <a href="student-dashboard.html" class="nav-item"><span class="icon">👤</span> Profile</a>
+  </nav>
+  <div class="sidebar-bottom">
+    <a href="#" class="nav-item"><span class="icon">❓</span> Help Center</a>
+    <a href="login.html" class="nav-item"><span class="icon">🚪</span> Logout</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Welcome back, Alex.</h1>
+      <p>Your curation of potential career paths is ready.</p>
+    </div>
+    <div class="topbar-right">
+      <button class="hamburger-btn" onclick="openSidebar()">☰</button>
+      <div class="notif-btn">🔔<div class="notif-dot"></div></div>
+      <div class="user-avatar">AL</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="content-inner">
+
+      <!-- PROFILE -->
+      <div class="profile-section">
+        <div class="profile-card">
+          <div class="profile-top">
+            <div>
+              <div class="portfolio-badge">● PORTFOLIO READY</div>
+              <div class="profile-name">Visual Design Student</div>
+              <div class="profile-school">Savannah College of Art and Design</div>
+            </div>
+            <button class="update-btn" onclick="alert('Resume builder coming soon!')">⬆ Update Resume</button>
+          </div>
+          <div class="profile-stats">
+            <div class="pstat">
+              <div class="pstat-label">Technical Skills</div>
+              <div class="pstat-tags"><span class="pstat-tag">Figma</span><span class="pstat-tag">React</span></div>
+            </div>
+            <div class="pstat">
+              <div class="pstat-label">Resume Score</div>
+              <div class="pstat-value blue">88/100</div>
+            </div>
+            <div class="pstat">
+              <div class="pstat-label">Experience</div>
+              <div class="pstat-value">2 Internships</div>
+            </div>
+            <div class="pstat">
+              <div class="pstat-label">Availability</div>
+              <div class="pstat-value green">Immediate</div>
+            </div>
+          </div>
+        </div>
+        <div class="tools-panel">
+          <div class="tool-btn blue-filled" onclick="alert('Resume builder coming soon!')">
+            <div class="tool-btn-left"><h4>Resume Builder</h4><p>Editorial templates ready.</p></div>
+            <div class="tool-btn-icon">📝</div>
+          </div>
+          <div class="tool-btn" onclick="location.href='interview-prep.html'">
+            <div class="tool-btn-left"><h4>Interview Prep</h4><p>Practice with AI curators.</p></div>
+            <div class="tool-btn-icon">🎤</div>
+          </div>
+          <div class="tool-btn">
+            <div class="tool-btn-left"><h4>Campus Partners</h4><p>Explore partner networks.</p></div>
+            <div class="tool-btn-icon">🤝</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVE APPLICATIONS -->
+      <div style="margin-bottom:2rem">
+        <div class="section-header-row">
+          <h2>Active Applications</h2>
+          <span class="view-all-link">View Full History</span>
+        </div>
+        <div class="app-card">
+          <div class="app-logo">🎨</div>
+          <div class="app-info">
+            <div class="app-title">Senior Product Designer</div>
+            <div class="app-company">Linear Meta-Systems • Applied 2 days ago</div>
+          </div>
+          <div class="app-progress">
+            <div class="progress-label">
+              <span class="progress-stage">Interview Phase</span>
+              <span class="progress-pct">75% Complete</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+          </div>
+          <div class="app-status"><span class="status-badge shortlisted">Shortlisted</span></div>
+        </div>
+        <div class="app-card">
+          <div class="app-logo">📋</div>
+          <div class="app-info">
+            <div class="app-title">Frontend Intern</div>
+            <div class="app-company">The Minimalist Agency • Applied 1 week ago</div>
+          </div>
+          <div class="app-progress">
+            <div class="progress-label">
+              <span class="progress-stage" style="color:#f59e0b">Under Review</span>
+              <span class="progress-pct">25% Complete</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill orange" style="width:25%"></div></div>
+          </div>
+          <div class="app-status"><span class="status-badge review">In Review</span></div>
+        </div>
+      </div>
+
+      <!-- CURATED FOR YOU -->
+      <div>
+        <div class="section-header-row">
+          <h2>Curated for You</h2>
+          <span class="ai-badge">✦ AI Suggested</span>
+        </div>
+        <div class="curated-grid">
+          <div class="intern-card" onclick="location.href='opportunities.html'">
+            <div class="intern-card-img card-dark">
+              <div class="intern-card-img-overlay"></div>
+              <span class="intern-card-tag">REMOTE</span>
+            </div>
+            <div class="intern-card-body">
+              <div class="intern-card-title-row">
+                <div class="intern-card-title">Visual Strategist</div>
+                <span class="bookmark-btn">🔖</span>
+              </div>
+              <div class="intern-card-company">Vellum Design Studio</div>
+              <div class="intern-card-tags"><span class="intern-tag">Editorial</span><span class="intern-tag">Branding</span></div>
+              <div class="intern-card-footer">
+                <span class="intern-price">$24/hr</span>
+                <a class="apply-link" href="opportunities.html">Apply Now →</a>
+              </div>
+            </div>
+          </div>
+          <div class="intern-card" onclick="location.href='opportunities.html'">
+            <div class="intern-card-img card-teal">
+              <div class="intern-card-img-overlay"></div>
+              <span class="intern-card-tag">HYBRID</span>
+            </div>
+            <div class="intern-card-body">
+              <div class="intern-card-title-row">
+                <div class="intern-card-title">UX Researcher</div>
+                <span class="bookmark-btn">🔖</span>
+              </div>
+              <div class="intern-card-company">Quantum Systems</div>
+              <div class="intern-card-tags"><span class="intern-tag">Figma</span><span class="intern-tag">Psychology</span></div>
+              <div class="intern-card-footer">
+                <span class="intern-price">$28/hr</span>
+                <a class="apply-link" href="opportunities.html">Apply Now →</a>
+              </div>
+            </div>
+          </div>
+          <div class="intern-card" onclick="location.href='opportunities.html'">
+            <div class="intern-card-img card-amber">
+              <div class="intern-card-img-overlay"></div>
+              <span class="intern-card-tag">NEW YORK</span>
+            </div>
+            <div class="intern-card-body">
+              <div class="intern-card-title-row">
+                <div class="intern-card-title">Content Curator</div>
+                <span class="bookmark-btn">🔖</span>
+              </div>
+              <div class="intern-card-company">The Highline Review</div>
+              <div class="intern-card-tags"><span class="intern-tag">Writing</span><span class="intern-tag">Arts</span></div>
+              <div class="intern-card-footer">
+                <span class="intern-price">$22/hr</span>
+                <a class="apply-link" href="opportunities.html">Apply Now →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>© 2024 THE EDITORIAL CAMPUS. BRIDGING AMBITION AND REALITY.</span>
+    <span>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Campus Partners</a>
+    </span>
+  </div>
+</div>
+
+<script>
+function openSidebar(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+</script>
+</body>
+</html>

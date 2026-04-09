@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Recruiter Dashboard — The Editorial Campus</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;display:flex;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+/* SIDEBAR */
+.sidebar{width:210px;background:#fff;border-right:1px solid #e8edf5;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;transition:transform .3s}
+.sidebar-logo{padding:1.4rem 1.2rem 1rem;border-bottom:1px solid #e8edf5}
+.sidebar-logo .brand{font-size:.88rem;font-weight:700;color:#1a1a2e}
+.sidebar-logo .sub{font-size:.65rem;color:#94a3b8;letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.sidebar-nav{flex:1;padding:1rem .75rem;display:flex;flex-direction:column;gap:.25rem}
+.nav-item{display:flex;align-items:center;gap:.7rem;padding:.65rem .75rem;border-radius:10px;font-size:.83rem;font-weight:500;color:#64748b;cursor:pointer;transition:.2s;text-decoration:none}
+.nav-item:hover{background:#f1f5f9;color:#1a1a2e}
+.nav-item.active{background:#eff6ff;color:#2563eb;font-weight:600}
+.nav-item .icon{font-size:1rem;width:18px;text-align:center}
+.sidebar-bottom{padding:.75rem;border-top:1px solid #e8edf5;display:flex;flex-direction:column;gap:.25rem}
+.new-opp-btn{margin:1rem .75rem;background:#2563eb;color:#fff;border:none;border-radius:10px;padding:.7rem;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.4rem;font-family:'Inter',sans-serif;transition:.2s}
+.new-opp-btn:hover{background:#1d4ed8}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:40}
+
+/* MAIN */
+.main{flex:1;margin-left:210px}
+
+/* TOPBAR */
+.topbar{background:#fff;border-bottom:1px solid #e8edf5;padding:1.25rem 2rem;display:flex;align-items:flex-start;justify-content:space-between}
+.topbar-left h1{font-size:1.6rem;font-weight:800;color:#0f172a;letter-spacing:-.02em}
+.topbar-left p{font-size:.83rem;color:#94a3b8;margin-top:.2rem}
+.topbar-right{display:flex;align-items:center;gap:.75rem}
+.user-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer}
+.hamburger-btn{display:none;width:38px;height:38px;border-radius:10px;background:#f1f5f9;border:1px solid #e2e8f0;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer}
+
+/* CONTENT */
+.content{padding:2rem;max-width:1200px;margin:0 auto}
+
+/* STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr) 1.3fr;gap:1.25rem;margin-bottom:2rem;align-items:start}
+.stat-card{background:#fff;border:1px solid #e8edf5;border-radius:14px;padding:1.5rem;transition:.2s}
+.stat-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.07)}
+.stat-card-icon{font-size:1.2rem;color:#2563eb;margin-bottom:.6rem}
+.stat-label{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#94a3b8}
+.stat-num{font-size:2rem;font-weight:800;color:#0f172a;margin-top:.2rem;line-height:1}
+.trends-card{background:#fff;border:1px solid #e8edf5;border-radius:14px;padding:1.5rem}
+.trends-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.trends-header h3{font-size:.9rem;font-weight:700;color:#0f172a}
+.trend-badge{background:#f0fdf4;color:#22c55e;font-size:.72rem;font-weight:700;padding:.25rem .55rem;border-radius:100px}
+.chart-bars{display:flex;align-items:flex-end;gap:.4rem;height:80px;margin-bottom:.5rem}
+.chart-bar{flex:1;border-radius:4px 4px 0 0;background:#dbeafe;transition:.3s;cursor:pointer}
+.chart-bar:hover{background:#93c5fd}
+.chart-bar.active{background:#2563eb}
+.trends-note{font-size:.72rem;color:#94a3b8}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr auto;gap:1.5rem;align-items:start}
+.left-col{min-width:0}
+.right-col{width:260px}
+
+/* OPPORTUNITIES */
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.card-header h2{font-size:1.05rem;font-weight:800;color:#0f172a}
+.view-all{font-size:.8rem;color:#2563eb;font-weight:600;cursor:pointer}
+.opp-list{display:flex;flex-direction:column;gap:.75rem}
+.opp-card{background:#fff;border:1px solid #e8edf5;border-radius:14px;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.1rem;transition:.2s}
+.opp-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.07)}
+.opp-icon{width:44px;height:44px;border-radius:12px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.opp-info{flex:1;min-width:0}
+.opp-category-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem}
+.opp-cat{font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:#eff6ff;color:#2563eb;padding:.2rem .5rem;border-radius:4px}
+.opp-posted{font-size:.72rem;color:#94a3b8}
+.opp-title{font-size:.95rem;font-weight:700;color:#0f172a}
+.opp-meta{display:flex;gap:.75rem;margin-top:.35rem}
+.opp-meta-item{font-size:.75rem;color:#64748b;display:flex;align-items:center;gap:.3rem}
+.opp-arrow{width:32px;height:32px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:1rem;cursor:pointer;flex-shrink:0;transition:.2s}
+.opp-arrow:hover{background:#2563eb;color:#fff}
+
+/* FEEDBACK BOX */
+.feedback-box{background:#fff;border:1px solid #e8edf5;border-radius:14px;padding:1.5rem;margin-top:.75rem}
+.feedback-box h3{font-size:.95rem;font-weight:700;color:#0f172a;margin-bottom:.4rem}
+.feedback-box p{font-size:.8rem;color:#64748b;line-height:1.6}
+.reviewer-avatars{display:flex;align-items:center;gap:-.5rem;margin-top:1rem}
+.r-avatar{width:32px;height:32px;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff;margin-left:-8px}
+.r-avatar:first-child{margin-left:0}
+.reviewers-note{font-size:.78rem;color:#2563eb;font-weight:600;margin-left:.5rem}
+
+/* RIGHT PANEL */
+.candidates-card,.interviews-card{background:#fff;border:1px solid #e8edf5;border-radius:14px;padding:1.25rem}
+.candidates-card{margin-bottom:1rem}
+.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.panel-header h3{font-size:.9rem;font-weight:700;color:#0f172a}
+.dots-menu{color:#94a3b8;cursor:pointer;font-size:1.2rem}
+.candidate-item{display:flex;align-items:center;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #f1f5f9}
+.candidate-item:last-child{border-bottom:none}
+.cand-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0}
+.cand-info{flex:1;min-width:0}
+.cand-name{font-size:.83rem;font-weight:700;color:#0f172a}
+.cand-role{font-size:.72rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.04em}
+
+/* INTERVIEWS */
+.interviews-card{background:#2563eb}
+.interviews-card .panel-header h3{color:#fff}
+.interviews-card .panel-header .icon{color:rgba(255,255,255,.7)}
+.interview-item{background:rgba(255,255,255,.12);border-radius:10px;padding:.75rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.75rem}
+.interview-item:last-child{margin-bottom:0}
+.int-date{background:rgba(255,255,255,.2);border-radius:8px;padding:.4rem .5rem;text-align:center;min-width:36px}
+.int-date .d{font-size:.95rem;font-weight:800;color:#fff;line-height:1}
+.int-date .m{font-size:.6rem;color:rgba(255,255,255,.7);text-transform:uppercase}
+.int-info{flex:1;min-width:0}
+.int-name{font-size:.82rem;font-weight:700;color:#fff}
+.int-time{font-size:.72rem;color:rgba(255,255,255,.65);margin-top:.1rem}
+.view-cal-btn{width:100%;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);color:#fff;border-radius:8px;padding:.6rem;font-size:.8rem;font-weight:700;cursor:pointer;margin-top:.75rem;font-family:'Inter',sans-serif;transition:.2s;letter-spacing:.03em}
+.view-cal-btn:hover{background:rgba(255,255,255,.25)}
+
+/* FOOTER */
+.page-footer{background:#0f172a;color:#64748b;padding:1.5rem 2rem;font-size:.72rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.page-footer a{color:#475569;margin-left:1rem}
+.page-footer a:hover{color:#94a3b8}
+
+@media(max-width:1100px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .two-col{grid-template-columns:1fr}
+  .right-col{width:100%}
+  .candidates-card,.interviews-card{display:inline-block;width:calc(50% - .5rem);vertical-align:top}
+}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .main{margin-left:0}
+  .hamburger-btn{display:flex}
+  .topbar{padding:1rem}
+  .content{padding:1rem}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .candidates-card,.interviews-card{width:100%;display:block}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">The Editorial Campus</div>
+    <div class="sub">Placement Portal</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="recruiter-dashboard.html" class="nav-item active"><span class="icon">📊</span> Dashboard</a>
+    <a href="opportunities.html" class="nav-item"><span class="icon">💼</span> Internships</a>
+    <a href="#" class="nav-item"><span class="icon">👥</span> Candidates</a>
+    <a href="#" class="nav-item"><span class="icon">📅</span> Interviews</a>
+    <a href="#" class="nav-item"><span class="icon">📈</span> Analytics</a>
+  </nav>
+  <button class="new-opp-btn" onclick="showPostModal()">+ New Opportunity</button>
+  <div class="sidebar-bottom">
+    <a href="#" class="nav-item"><span class="icon">❓</span> Help Center</a>
+    <a href="login.html" class="nav-item"><span class="icon">🚪</span> Logout</a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Recruiter Dashboard</h1>
+      <p>Curating the next generation of industry talent.</p>
+    </div>
+    <div class="topbar-right">
+      <button class="hamburger-btn" onclick="openSidebar()">☰</button>
+      <div class="user-avatar">👤</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-icon">▶</div>
+        <div class="stat-label">Active Listings</div>
+        <div class="stat-num">12</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">👥</div>
+        <div class="stat-label">New Candidates</div>
+        <div class="stat-num">48</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">✅</div>
+        <div class="stat-label">Placements</div>
+        <div class="stat-num">08</div>
+      </div>
+      <div class="trends-card">
+        <div class="trends-header">
+          <h3>Application Trends</h3>
+          <span class="trend-badge">+12%</span>
+        </div>
+        <div class="chart-bars">
+          <div class="chart-bar" style="height:45%"></div>
+          <div class="chart-bar" style="height:55%"></div>
+          <div class="chart-bar" style="height:40%"></div>
+          <div class="chart-bar active" style="height:90%"></div>
+          <div class="chart-bar" style="height:70%"></div>
+        </div>
+        <div class="trends-note">Growth in editorial applications vs last month.</div>
+      </div>
+    </div>
+
+    <!-- TWO COL -->
+    <div class="two-col">
+      <div class="left-col">
+        <div class="card-header">
+          <h2>Featured Opportunities</h2>
+          <span class="view-all" onclick="location.href='opportunities.html'">View All Listings</span>
+        </div>
+        <div class="opp-list">
+          <div class="opp-card">
+            <div class="opp-icon">📝</div>
+            <div class="opp-info">
+              <div class="opp-category-row"><span class="opp-cat">Editorial</span><span class="opp-posted">Posted 2 days ago</span></div>
+              <div class="opp-title">Creative Copywriting Intern</div>
+              <div class="opp-meta">
+                <span class="opp-meta-item">👤 24 Applicants</span>
+                <span class="opp-meta-item">📋 5 Shortlisted</span>
+              </div>
+            </div>
+            <div class="opp-arrow">→</div>
+          </div>
+          <div class="opp-card">
+            <div class="opp-icon">🎨</div>
+            <div class="opp-info">
+              <div class="opp-category-row"><span class="opp-cat" style="background:#faf5ff;color:#7c3aed">Design</span><span class="opp-posted">Posted 5 days ago</span></div>
+              <div class="opp-title">Visual Arts & Layout Trainee</div>
+              <div class="opp-meta">
+                <span class="opp-meta-item">👤 18 Applicants</span>
+                <span class="opp-meta-item">📋 2 Shortlisted</span>
+              </div>
+            </div>
+            <div class="opp-arrow">→</div>
+          </div>
+        </div>
+
+        <div class="feedback-box" style="margin-top:.75rem">
+          <h3>Internal Feedback</h3>
+          <p>Centralize candidate evaluations from the interview committee in one unified dashboard.</p>
+          <div style="display:flex;align-items:center;gap:.5rem;margin-top:1rem">
+            <div class="reviewer-avatars">
+              <div class="r-avatar" style="background:#3b82f6">JT</div>
+              <div class="r-avatar" style="background:#8b5cf6">ER</div>
+              <div class="r-avatar" style="background:#22c55e">SJ</div>
+            </div>
+            <span class="reviewers-note">+ 4 Reviewers Active</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="candidates-card">
+          <div class="panel-header">
+            <h3>Priority Candidates</h3>
+            <span class="dots-menu">•••</span>
+          </div>
+          <div class="candidate-item">
+            <div class="cand-avatar" style="background:#3b82f6">ER</div>
+            <div class="cand-info">
+              <div class="cand-name">Elena Rodriguez</div>
+              <div class="cand-role">Graphic Design • Senior</div>
+            </div>
+          </div>
+          <div class="candidate-item">
+            <div class="cand-avatar" style="background:#8b5cf6">JT</div>
+            <div class="cand-info">
+              <div class="cand-name">Julian Thorne</div>
+              <div class="cand-role">Journalism • Junior</div>
+            </div>
+          </div>
+          <div class="candidate-item">
+            <div class="cand-avatar" style="background:#f59e0b">SJ</div>
+            <div class="cand-info">
+              <div class="cand-name">Sarah Jenkins</div>
+              <div class="cand-role">Digital Media • Graduate</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="interviews-card">
+          <div class="panel-header">
+            <h3>📅 Upcoming Interviews</h3>
+          </div>
+          <div class="interview-item">
+            <div class="int-date"><div class="d">14</div><div class="m">OCT</div></div>
+            <div class="int-info">
+              <div class="int-name">Sarah Jenkins</div>
+              <div class="int-time">Editorial Review • 10:00 AM</div>
+            </div>
+          </div>
+          <div class="interview-item">
+            <div class="int-date"><div class="d">15</div><div class="m">OCT</div></div>
+            <div class="int-info">
+              <div class="int-name">Julian Thorne</div>
+              <div class="int-time">Portfolio Deep Dive • 2:30 PM</div>
+            </div>
+          </div>
+          <button class="view-cal-btn">VIEW CALENDAR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>© 2024 THE EDITORIAL CAMPUS. BRIDGING AMBITION AND REALITY.</span>
+    <span>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Campus Partners</a>
+      <a href="#">Recruiter FAQ</a>
+    </span>
+  </div>
+</div>
+
+<!-- POST MODAL -->
+<div id="postModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:20px;padding:2rem;max-width:480px;width:90%;position:relative">
+    <button onclick="closePostModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#94a3b8">×</button>
+    <h2 style="font-size:1.2rem;font-weight:800;color:#0f172a;margin-bottom:1.5rem">Post New Opportunity</h2>
+    <div style="margin-bottom:1rem"><label style="font-size:.72rem;font-weight:600;text-transform:uppercase;color:#64748b;letter-spacing:.06em;display:block;margin-bottom:.4rem">Role Title</label><input style="width:100%;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;padding:.7rem 1rem;font-size:.88rem;font-family:Inter,sans-serif" placeholder="e.g. Creative Copywriting Intern"/></div>
+    <div style="margin-bottom:1rem"><label style="font-size:.72rem;font-weight:600;text-transform:uppercase;color:#64748b;letter-spacing:.06em;display:block;margin-bottom:.4rem">Category</label><select style="width:100%;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;padding:.7rem 1rem;font-size:.88rem;font-family:Inter,sans-serif"><option>Editorial</option><option>Design</option><option>Technology</option><option>Marketing</option></select></div>
+    <div style="margin-bottom:1rem"><label style="font-size:.72rem;font-weight:600;text-transform:uppercase;color:#64748b;letter-spacing:.06em;display:block;margin-bottom:.4rem">Stipend</label><input style="width:100%;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;padding:.7rem 1rem;font-size:.88rem;font-family:Inter,sans-serif" placeholder="e.g. ₹25,000/month"/></div>
+    <div style="margin-bottom:1.5rem"><label style="font-size:.72rem;font-weight:600;text-transform:uppercase;color:#64748b;letter-spacing:.06em;display:block;margin-bottom:.4rem">Description</label><textarea style="width:100%;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;padding:.7rem 1rem;font-size:.88rem;font-family:Inter,sans-serif;resize:vertical;min-height:80px" placeholder="Describe the internship role…"></textarea></div>
+    <button style="width:100%;background:#2563eb;color:#fff;border:none;border-radius:10px;padding:.85rem;font-size:.9rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif" onclick="alert('Opportunity posted successfully!');closePostModal()">Post Opportunity →</button>
+  </div>
+</div>
+
+<script>
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('open')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open')}
+function showPostModal(){document.getElementById('postModal').style.display='flex'}
+function closePostModal(){document.getElementById('postModal').style.display='none'}
+</script>
+</body>
+</html>

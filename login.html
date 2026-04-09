@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Login — The Editorial Campus</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;display:flex;flex-direction:column}
+a{text-decoration:none;color:inherit}
+
+/* NAV */
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 5vw;background:#fff;border-bottom:1px solid #e8edf5}
+.logo{font-size:.95rem;font-weight:700;color:#1a1a2e}
+.help-link{font-size:.82rem;color:#64748b}
+.help-link:hover{color:#2563eb}
+
+/* MAIN */
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem 5vw}
+.login-container{background:#fff;border-radius:20px;overflow:hidden;display:grid;grid-template-columns:1fr 1.15fr;max-width:860px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.1)}
+
+/* LEFT PANEL */
+.login-left{background:linear-gradient(160deg,#1e40af 0%,#2563eb 40%,#3b82f6 100%);padding:3rem 2.5rem;display:flex;flex-direction:column;justify-content:space-between;min-height:520px;position:relative;overflow:hidden}
+.login-left::before{content:'';position:absolute;top:-80px;right:-80px;width:250px;height:250px;border-radius:50%;background:rgba(255,255,255,.07)}
+.login-left::after{content:'';position:absolute;bottom:-60px;left:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05)}
+.login-left-content{position:relative;z-index:1}
+.login-left h2{font-size:clamp(1.8rem,3.5vw,2.5rem);font-weight:800;color:#fff;line-height:1.15;letter-spacing:-.02em}
+.login-left p{color:rgba(255,255,255,.7);margin-top:.9rem;font-size:.88rem;line-height:1.65}
+.verified-tag{display:flex;align-items:center;gap:.6rem;margin-top:2.5rem;background:rgba(255,255,255,.12);border-radius:10px;padding:.7rem 1rem;position:relative;z-index:1}
+.verified-icon{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1rem}
+.verified-tag-text span{display:block;color:#fff;font-size:.82rem;font-weight:600}
+.verified-tag-text small{color:rgba(255,255,255,.6);font-size:.72rem}
+
+/* RIGHT PANEL */
+.login-right{padding:2.5rem 2.5rem}
+.login-right h3{font-size:1.35rem;font-weight:800;color:#0f172a;margin-bottom:.3rem}
+.role-label{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;margin-bottom:1.2rem}
+.role-tabs{display:flex;background:#f1f5f9;border-radius:10px;padding:4px;gap:4px;margin-bottom:1.8rem}
+.role-tab{flex:1;padding:.55rem;border-radius:7px;font-size:.82rem;font-weight:600;color:#64748b;background:transparent;border:none;cursor:pointer;transition:background .2s,color .2s;text-align:center}
+.role-tab.active{background:#fff;color:#1d4ed8;box-shadow:0 1px 6px rgba(0,0,0,.08)}
+.form-group{margin-bottom:1.1rem}
+.form-label{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#64748b;display:block;margin-bottom:.5rem}
+.form-input{width:100%;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:.75rem 1rem .75rem 2.6rem;font-size:.9rem;color:#0f172a;transition:border-color .2s;font-family:'Inter',sans-serif}
+.form-input:focus{border-color:#2563eb;background:#fff;outline:none}
+.input-wrap{position:relative}
+.input-icon{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);font-size:.9rem;color:#94a3b8}
+.form-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.checkbox-wrap{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#64748b;cursor:pointer}
+.checkbox-wrap input{width:16px;height:16px;border-radius:4px;accent-color:#2563eb}
+.forgot-link{font-size:.82rem;color:#2563eb;font-weight:600}
+.forgot-link:hover{color:#1d4ed8}
+.btn-login{width:100%;background:#1d4ed8;color:#fff;padding:.85rem;border-radius:10px;font-size:.95rem;font-weight:700;border:none;cursor:pointer;transition:background .2s,transform .15s;font-family:'Inter',sans-serif}
+.btn-login:hover{background:#1e40af;transform:translateY(-1px)}
+.divider{display:flex;align-items:center;gap:.75rem;margin:1.2rem 0;color:#94a3b8;font-size:.75rem;letter-spacing:.04em}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#e2e8f0}
+.social-btns{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.social-btn{display:flex;align-items:center;justify-content:center;gap:.6rem;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:.65rem;font-size:.82rem;font-weight:600;color:#1a1a2e;cursor:pointer;transition:border-color .2s;font-family:'Inter',sans-serif}
+.social-btn:hover{border-color:#2563eb;color:#2563eb}
+.register-link{text-align:center;margin-top:1.3rem;font-size:.82rem;color:#64748b}
+.register-link a{color:#2563eb;font-weight:600}
+.register-link a:hover{color:#1d4ed8}
+
+/* FOOTER */
+footer{background:#0f172a;padding:1.5rem 5vw}
+.footer-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.footer-logo{font-size:.82rem;font-weight:700;color:#fff}
+.footer-copy{font-size:.72rem;color:#475569}
+.footer-links{display:flex;gap:1.2rem}
+.footer-links a{font-size:.72rem;color:#475569;transition:color .2s}
+.footer-links a:hover{color:#94a3b8}
+
+@media(max-width:680px){
+  .login-container{grid-template-columns:1fr}
+  .login-left{display:none}
+  .login-right{padding:2rem 1.5rem}
+  .footer-inner{flex-direction:column;text-align:center}
+  .footer-links{justify-content:center;flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="index.html" class="logo">The Editorial Campus</a>
+  <a href="#" class="help-link">Need help? Contact support</a>
+</div>
+
+<main>
+  <div class="login-container">
+    <!-- LEFT -->
+    <div class="login-left">
+      <div class="login-left-content">
+        <h2>Bridging ambition and reality.</h2>
+        <p>The premium digital curator for next-generation talent and elite opportunities.</p>
+      </div>
+      <div class="verified-tag">
+        <div class="verified-icon">✓</div>
+        <div class="verified-tag-text">
+          <span>Verified Listings</span>
+          <small>Curated by our editorial team</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="login-right">
+      <h3>Welcome back</h3>
+      <div class="role-label">Select your role to continue</div>
+      <div class="role-tabs">
+        <button class="role-tab active" onclick="setRole(this,'student')">Student</button>
+        <button class="role-tab" onclick="setRole(this,'recruiter')">Recruiter</button>
+        <button class="role-tab" onclick="setRole(this,'placement')">Placement Cell</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">University Email</label>
+        <div class="input-wrap">
+          <span class="input-icon">✉</span>
+          <input type="email" class="form-input" placeholder="name@university.edu" id="emailInput"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="display:flex;justify-content:space-between">
+          Password <a href="#" class="forgot-link">Forgot password?</a>
+        </label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" class="form-input" placeholder="••••••••" id="passInput"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="checkbox-wrap"><input type="checkbox"/> Keep me signed in on this device</label>
+      </div>
+      <button class="btn-login" onclick="handleLogin()">Sign into Account →</button>
+
+      <div class="divider">OR CONTINUE WITH</div>
+      <div class="social-btns">
+        <button class="social-btn">🔵 Google</button>
+        <button class="social-btn">💼 LinkedIn</button>
+      </div>
+
+      <div class="register-link">
+        New to the campus? <a href="register.html">Create an account</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">The Editorial Campus</div>
+    <div class="footer-copy">© 2024 The Editorial Campus. Bridging ambition and reality.</div>
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Campus Partners</a>
+      <a href="#">Recruiter FAQ</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+let currentRole = 'student';
+function setRole(el, role){
+  currentRole = role;
+  document.querySelectorAll('.role-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+function handleLogin(){
+  const email = document.getElementById('emailInput').value;
+  const pass  = document.getElementById('passInput').value;
+  if(!email || !pass){ alert('Please enter your email and password.'); return; }
+  if(currentRole==='student')      location.href='student-dashboard.html';
+  else if(currentRole==='recruiter') location.href='recruiter-dashboard.html';
+  else                               location.href='recruiter-dashboard.html';
+}
+</script>
+</body>
+</html>

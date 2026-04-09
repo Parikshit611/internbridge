@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Register — The Editorial Campus</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;display:flex;flex-direction:column}
+a{text-decoration:none;color:inherit}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 5vw;background:#fff;border-bottom:1px solid #e8edf5}
+.logo{font-size:.95rem;font-weight:700;color:#1a1a2e}
+.help-link{font-size:.82rem;color:#64748b}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem 5vw}
+.reg-container{background:#fff;border-radius:20px;overflow:hidden;display:grid;grid-template-columns:1fr 1.2fr;max-width:860px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.1)}
+.reg-left{background:linear-gradient(160deg,#0f766e 0%,#0d9488 40%,#14b8a6 100%);padding:3rem 2.5rem;display:flex;flex-direction:column;justify-content:space-between;min-height:560px;position:relative;overflow:hidden}
+.reg-left::before{content:'';position:absolute;top:-80px;right:-80px;width:250px;height:250px;border-radius:50%;background:rgba(255,255,255,.07)}
+.reg-left h2{font-size:2rem;font-weight:800;color:#fff;line-height:1.2;position:relative;z-index:1}
+.reg-left p{color:rgba(255,255,255,.75);margin-top:.8rem;font-size:.88rem;line-height:1.6;position:relative;z-index:1}
+.benefit-list{margin-top:2rem;display:flex;flex-direction:column;gap:.75rem;position:relative;z-index:1}
+.benefit-item{display:flex;align-items:center;gap:.6rem;color:rgba(255,255,255,.9);font-size:.82rem}
+.benefit-icon{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.reg-right{padding:2.5rem}
+.reg-right h3{font-size:1.35rem;font-weight:800;color:#0f172a;margin-bottom:.3rem}
+.role-label{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;margin-bottom:1.2rem}
+.role-tabs{display:flex;background:#f1f5f9;border-radius:10px;padding:4px;gap:4px;margin-bottom:1.5rem}
+.role-tab{flex:1;padding:.5rem;border-radius:7px;font-size:.8rem;font-weight:600;color:#64748b;background:transparent;border:none;cursor:pointer;transition:.2s;text-align:center}
+.role-tab.active{background:#fff;color:#0d9488;box-shadow:0 1px 6px rgba(0,0,0,.08)}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.form-group{margin-bottom:1rem}
+.form-label{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#64748b;display:block;margin-bottom:.45rem}
+.form-input{width:100%;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:.72rem 1rem;font-size:.88rem;color:#0f172a;transition:border-color .2s;font-family:'Inter',sans-serif}
+.form-input:focus{border-color:#0d9488;background:#fff;outline:none}
+select.form-input{appearance:none;cursor:pointer}
+.btn-reg{width:100%;background:#0d9488;color:#fff;padding:.85rem;border-radius:10px;font-size:.95rem;font-weight:700;border:none;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif;margin-top:.5rem}
+.btn-reg:hover{background:#0f766e;transform:translateY(-1px)}
+.login-link{text-align:center;margin-top:1rem;font-size:.82rem;color:#64748b}
+.login-link a{color:#0d9488;font-weight:600}
+footer{background:#0f172a;padding:1.5rem 5vw}
+.footer-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.footer-logo{font-size:.82rem;font-weight:700;color:#fff}
+.footer-copy{font-size:.72rem;color:#475569}
+.footer-links{display:flex;gap:1.2rem}
+.footer-links a{font-size:.72rem;color:#475569}
+@media(max-width:680px){
+  .reg-container{grid-template-columns:1fr}
+  .reg-left{display:none}
+  .form-row-2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <a href="index.html" class="logo">The Editorial Campus</a>
+  <a href="#" class="help-link">Need help? Contact support</a>
+</div>
+<main>
+  <div class="reg-container">
+    <div class="reg-left">
+      <div>
+        <h2>Start your career journey today.</h2>
+        <p>Join thousands of students and recruiters on the most curated internship platform on campus.</p>
+        <div class="benefit-list">
+          <div class="benefit-item"><div class="benefit-icon">🎯</div>AI-matched internship recommendations</div>
+          <div class="benefit-item"><div class="benefit-icon">✅</div>Verified company listings only</div>
+          <div class="benefit-item"><div class="benefit-icon">📊</div>Real-time application tracking</div>
+          <div class="benefit-item"><div class="benefit-icon">🏅</div>Auto-generated completion certificates</div>
+        </div>
+      </div>
+    </div>
+    <div class="reg-right">
+      <h3>Create your account</h3>
+      <div class="role-label">Select your role</div>
+      <div class="role-tabs">
+        <button class="role-tab active">Student</button>
+        <button class="role-tab" onclick="setTab(this)">Recruiter</button>
+        <button class="role-tab" onclick="setTab(this)">Placement Cell</button>
+      </div>
+      <div class="form-row-2">
+        <div class="form-group"><label class="form-label">First Name</label><input class="form-input" type="text" placeholder="Ananya"/></div>
+        <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" type="text" placeholder="Sharma"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">University Email</label><input class="form-input" type="email" placeholder="name@university.edu"/></div>
+      <div class="form-group"><label class="form-label">Department / Branch</label>
+        <select class="form-input"><option>Select department</option><option>Computer Science</option><option>Information Technology</option><option>Electronics</option><option>Mechanical</option><option>MBA</option></select>
+      </div>
+      <div class="form-row-2">
+        <div class="form-group"><label class="form-label">Year</label>
+          <select class="form-input"><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>Final Year</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">CGPA</label><input class="form-input" type="text" placeholder="8.5"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="Create a strong password"/></div>
+      <button class="btn-reg" onclick="location.href='student-dashboard.html'">Create Account →</button>
+      <div class="login-link">Already have an account? <a href="login.html">Sign in</a></div>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">The Editorial Campus</div>
+    <div class="footer-copy">© 2024 The Editorial Campus. Bridging ambition and reality.</div>
+    <div class="footer-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
+  </div>
+</footer>
+<script>
+function setTab(el){
+  document.querySelectorAll('.role-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+document.querySelectorAll('.role-tab').forEach(t=>{
+  t.addEventListener('click',function(){setTab(this)});
+});
+</script>
+</body>
+</html>
