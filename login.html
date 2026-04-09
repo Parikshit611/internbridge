@@ -52,6 +52,8 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem 
 .forgot-link:hover{color:#1d4ed8}
 .btn-login{width:100%;background:#1d4ed8;color:#fff;padding:.85rem;border-radius:10px;font-size:.95rem;font-weight:700;border:none;cursor:pointer;transition:background .2s,transform .15s;font-family:'Inter',sans-serif}
 .btn-login:hover{background:#1e40af;transform:translateY(-1px)}
+.login-message{min-height:1.2rem;margin-top:.85rem;font-size:.8rem;font-weight:600;color:#dc2626}
+.login-message.success{color:#15803d}
 .divider{display:flex;align-items:center;gap:.75rem;margin:1.2rem 0;color:#94a3b8;font-size:.75rem;letter-spacing:.04em}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:#e2e8f0}
 .social-btns{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
@@ -114,10 +116,10 @@ footer{background:#0f172a;padding:1.5rem 5vw}
       </div>
 
       <div class="form-group">
-        <label class="form-label">University Email</label>
+        <label class="form-label">University Email / Login ID</label>
         <div class="input-wrap">
           <span class="input-icon">✉</span>
-          <input type="email" class="form-input" placeholder="name@university.edu" id="emailInput"/>
+          <input type="text" class="form-input" placeholder="name@university.edu or student01" id="emailInput"/>
         </div>
       </div>
       <div class="form-group">
@@ -134,6 +136,7 @@ footer{background:#0f172a;padding:1.5rem 5vw}
       </div>
       <button class="btn-login" onclick="handleLogin()">Sign into Account →</button>
 
+      <div class="login-message" id="loginMessage" aria-live="polite"></div>
       <div class="divider">OR CONTINUE WITH</div>
       <div class="social-btns">
         <button class="social-btn">🔵 Google</button>
@@ -162,18 +165,130 @@ footer{background:#0f172a;padding:1.5rem 5vw}
 
 <script>
 let currentRole = 'student';
+const LOGIN_ROUTE_BY_ROLE = {
+  student: 'student-dashboard.html',
+  recruiter: 'recruiter-dashboard.html',
+  placement: 'recruiter-dashboard.html'
+};
+
+const DEMO_ACCOUNTS = [
+  { role: 'student', loginId: 'student01', email: 'student01@internbridge.edu', password: 'Student@123', name: 'Aarav Sharma' },
+  { role: 'student', loginId: 'student02', email: 'student02@internbridge.edu', password: 'Campus@456', name: 'Riya Nair' },
+  { role: 'recruiter', loginId: 'recruiter01', email: 'recruiter01@company.com', password: 'Recruit@123', name: 'Priya Mehta' },
+  { role: 'recruiter', loginId: 'talentlead', email: 'talentlead@company.com', password: 'Hiring@789', name: 'Karan Verma' },
+  { role: 'placement', loginId: 'placement01', email: 'placement01@college.edu', password: 'Placement@123', name: 'Placement Cell Admin' },
+  { role: 'placement', loginId: 'tpooffice', email: 'tpooffice@college.edu', password: 'TPO@456', name: 'Training Office' }
+];
+
+const MAX_FAILED_ATTEMPTS = 3;
+const LOCKOUT_WINDOW_MS = 30000;
+
 function setRole(el, role){
   currentRole = role;
   document.querySelectorAll('.role-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
+  setLoginMessage('');
 }
+
+function setLoginMessage(message, type){
+  const messageEl = document.getElementById('loginMessage');
+  messageEl.textContent = message || '';
+  messageEl.classList.toggle('success', type === 'success');
+}
+
+function getAttemptState(){
+  try{
+    return JSON.parse(localStorage.getItem('internbridgeLoginGuard')) || { failedAttempts: 0, lockedUntil: 0 };
+  }catch(error){
+    return { failedAttempts: 0, lockedUntil: 0 };
+  }
+}
+
+function saveAttemptState(state){
+  localStorage.setItem('internbridgeLoginGuard', JSON.stringify(state));
+}
+
+function clearAttemptState(){
+  saveAttemptState({ failedAttempts: 0, lockedUntil: 0 });
+}
+
+function getLockoutSecondsRemaining(){
+  const { lockedUntil } = getAttemptState();
+  if(!lockedUntil){ return 0; }
+  return Math.max(0, Math.ceil((lockedUntil - Date.now()) / 1000));
+}
+
+function recordFailedAttempt(){
+  const state = getAttemptState();
+  const failedAttempts = state.failedAttempts + 1;
+  const nextState = {
+    failedAttempts,
+    lockedUntil: failedAttempts >= MAX_FAILED_ATTEMPTS ? Date.now() + LOCKOUT_WINDOW_MS : 0
+  };
+  saveAttemptState(nextState);
+  return nextState;
+}
+
+function findMatchingAccount(identifier, password, role){
+  const normalizedIdentifier = identifier.trim().toLowerCase();
+  return DEMO_ACCOUNTS.find(account => {
+    const matchesRole = account.role === role;
+    const matchesIdentifier = account.loginId.toLowerCase() === normalizedIdentifier || account.email.toLowerCase() === normalizedIdentifier;
+    return matchesRole && matchesIdentifier && account.password === password;
+  });
+}
+
+function persistSession(account){
+  const keepSignedIn = document.querySelector('.checkbox-wrap input').checked;
+  const sessionData = JSON.stringify({
+    role: account.role,
+    name: account.name,
+    loginId: account.loginId,
+    email: account.email,
+    loginAt: new Date().toISOString()
+  });
+
+  sessionStorage.setItem('internbridgeSession', sessionData);
+  if(keepSignedIn){
+    localStorage.setItem('internbridgeSession', sessionData);
+  }else{
+    localStorage.removeItem('internbridgeSession');
+  }
+}
+
 function handleLogin(){
-  const email = document.getElementById('emailInput').value;
-  const pass  = document.getElementById('passInput').value;
-  if(!email || !pass){ alert('Please enter your email and password.'); return; }
-  if(currentRole==='student')      location.href='student-dashboard.html';
-  else if(currentRole==='recruiter') location.href='recruiter-dashboard.html';
-  else                               location.href='recruiter-dashboard.html';
+  const identifier = document.getElementById('emailInput').value;
+  const pass = document.getElementById('passInput').value;
+  const lockoutSeconds = getLockoutSecondsRemaining();
+
+  if(lockoutSeconds > 0){
+    setLoginMessage('Too many failed attempts. Please wait ' + lockoutSeconds + ' seconds and try again.');
+    return;
+  }
+
+  if(!identifier.trim() || !pass){
+    setLoginMessage('Please enter your login ID or email and password.');
+    return;
+  }
+
+  const account = findMatchingAccount(identifier, pass, currentRole);
+  if(!account){
+    const state = recordFailedAttempt();
+    if(state.lockedUntil){
+      setLoginMessage('Login temporarily locked for 30 seconds after multiple failed attempts.');
+    }else{
+      const attemptsLeft = MAX_FAILED_ATTEMPTS - state.failedAttempts;
+      setLoginMessage('Invalid credentials for the selected role. ' + attemptsLeft + ' attempt' + (attemptsLeft === 1 ? '' : 's') + ' remaining.');
+    }
+    return;
+  }
+
+  clearAttemptState();
+  persistSession(account);
+  setLoginMessage('Login successful. Redirecting to your dashboard...', 'success');
+  setTimeout(function(){
+    location.href = LOGIN_ROUTE_BY_ROLE[currentRole];
+  }, 400);
 }
 </script>
 </body>
